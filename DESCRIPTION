@@ -1,0 +1,9 @@
+Package: RemoteMatrix
+Title: Name says it all. For now.
+Version: 0.0.0.9000
+Authors@R: person("Alexander", "Grüneberg", email = "alexander.grueneberg@googlemail.com", role = c("aut", "cre"))
+Description: See title.
+Depends: R (>= 3.1.1), methods
+Imports: httr, jsonlite
+License: MIT + file LICENSE
+LazyData: true
