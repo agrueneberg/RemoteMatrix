@@ -1,0 +1,8 @@
+{
+    "name": "RemoteMatrix",
+    "version": "0.0.1",
+    "dependencies": {
+        "csv-parse": ""
+    },
+    "private": true
+}
