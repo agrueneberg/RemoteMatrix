@@ -53,3 +53,12 @@ setReplaceMethod('[', signature(x = 'RemoteMatrix'), function (x, i, j, value) {
     PUT(x@uri, query = as.list(request_params))
     return(x)
 })
+
+#' The dim method for the S4 RemoteMatrix class.
+#'
+#' @export
+setMethod("dim", signature("RemoteMatrix"), function (x) {
+    r <- GET(paste0(x@uri, '/dim'))
+    response_body <- content(r)
+    return(c(response_body$rows, response_body$columns))
+})
