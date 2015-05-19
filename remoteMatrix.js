@@ -25,39 +25,47 @@ parser = csv({
     };
 
     http.createServer(function (req, res) {
-        var indexes, parsedUrl, subset;
+        var indexes, parsedUrl, response, subset;
         indexes = {};
         parsedUrl = url.parse(req.url, true);
-        ["i", "j"].forEach(function (index) {
-            if (parsedUrl.query.hasOwnProperty(index)) {
-                indexes[index] = parsedUrl.query[index].split(",").map(toZeroIndex);
-            }
-        });
-        if (indexes.i !== undefined && indexes.j !== undefined) {
-            subset = matrix.map(function (row) {
-                return row.filter(function (col, idx) {
-                    return indexes.j.indexOf(idx) !== -1;
-                });
-            }).filter(function (col, idx) {
-                return indexes.i.indexOf(idx) !== -1;
-            });
-        } else if (indexes.i !== undefined && indexes.j === undefined) {
-            subset = matrix.filter(function (row, idx) {
-                return indexes.i.indexOf(idx) !== -1;
-            });
-        } else if (indexes.i === undefined && indexes.j !== undefined) {
-            subset = matrix.map(function (row) {
-                return row.filter(function (col, idx) {
-                    return indexes.j.indexOf(idx) !== -1;
-                });
-            });
+        if (parsedUrl.path === "/dim") {
+            response = {
+                rows: matrix.length,
+                columns: matrix[0].length
+            };
         } else {
-            subset = matrix;
+            ["i", "j"].forEach(function (index) {
+                if (parsedUrl.query.hasOwnProperty(index)) {
+                    indexes[index] = parsedUrl.query[index].split(",").map(toZeroIndex);
+                }
+            });
+            if (indexes.i !== undefined && indexes.j !== undefined) {
+                subset = matrix.map(function (row) {
+                    return row.filter(function (col, idx) {
+                        return indexes.j.indexOf(idx) !== -1;
+                    });
+                }).filter(function (col, idx) {
+                    return indexes.i.indexOf(idx) !== -1;
+                });
+            } else if (indexes.i !== undefined && indexes.j === undefined) {
+                subset = matrix.filter(function (row, idx) {
+                    return indexes.i.indexOf(idx) !== -1;
+                });
+            } else if (indexes.i === undefined && indexes.j !== undefined) {
+                subset = matrix.map(function (row) {
+                    return row.filter(function (col, idx) {
+                        return indexes.j.indexOf(idx) !== -1;
+                    });
+                });
+            } else {
+                subset = matrix;
+            }
+            response = subset;
         }
         res.writeHead(200, {
             "Content-Type": "application/json"
         });
-        res.end(JSON.stringify(subset));
+        res.end(JSON.stringify(response));
     }).listen(5000, "127.0.0.1");
 
     console.log("Server running at http://127.0.0.1:5000/");
