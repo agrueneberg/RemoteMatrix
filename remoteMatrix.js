@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var fs, csv, http, url, path, parser;
 
 fs = require("fs");
